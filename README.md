@@ -1,3 +1,13 @@
+# Installation
+ 
+**Pre requisite**
+
+Install pnpm command by [here](https://pnpm.io/installation)
+
+1. pnpm install after clone repository
+2. pnpm dev (run as development)
+3. access to http://localhost:5173
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
