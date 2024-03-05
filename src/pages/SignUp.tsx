@@ -28,7 +28,7 @@ function reducer(state: SignupForm, action: SignupDispatch) {
   }
 }
 
-export const Signup = () => {
+export const SignUp = () => {
   const [formState, dispatch] = useReducer(reducer, INITIAL_Signup_FORM_STATE)
 
   const handleInputChange =
