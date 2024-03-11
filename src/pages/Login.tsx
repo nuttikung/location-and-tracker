@@ -29,13 +29,13 @@ export const Login = () => {
     // COMMENT: validate form don't send to BE if no user or password provide.
     if (formState.password !== '' && formState.username !== '') {
       try {
-        const { token } = await getAxiosInstance().post<{ token: string }>(
+        const { token } = await getAxiosInstance().post<{ token: string}>(
           '/user/login',
           formState,
         )
         if (token) {
           localStorage.setItem(config.accessToken, token)
-          navigate('/')
+          navigate('/home')
         }
       } catch (error) {
         // TODO: handle error like error cause user and password does not match.
@@ -73,7 +73,7 @@ export const Login = () => {
               placeholder="password"
               className="m-1 rounded-lg p-2 text-xl font-bold text-slate-700 outline-none"
             />
-            <button type="submit" className="m-2 bg-slate-500 p-2 text-xl">
+            <button type="submit" className="m-2 bg-slate-500 active:bg-slate-600 p-2 text-xl">
               Log in
             </button>
           </form>
