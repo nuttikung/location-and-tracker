@@ -1,34 +1,19 @@
 import { useReducer } from 'react'
-import {
-  type LoginForm,
-  LoginFormField,
-  LoginAction,
-  LoginDispatch,
-} from '@/types'
-import { Link } from 'react-router-dom'
+import { LoginFormField, LoginAction } from '@/types'
+import { Link, useNavigate } from 'react-router-dom'
+import { config } from '@/constant'
 
-// TODO: extract to new file ?
-const INITIAL_LOGIN_FORM_STATE: LoginForm = {
-  username: '',
-  password: '',
-}
+import { getAxiosInstance } from '@/helpers'
 
-// TODO: extract this to state file ?
-function reducer(state: LoginForm, action: LoginDispatch) {
-  const { type, payload } = action
-  switch (type) {
-    case LoginAction.CHANGE_VALUE:
-      return {
-        ...state,
-        [action.field]: payload,
-      }
-    default:
-      return state
-  }
-}
+import { INITIAL_LOGIN_FORM_STATE, loginFormReducer } from '@/states'
 
+// TODO: Missing for loading stack for submit.
 export const Login = () => {
-  const [formState, dispatch] = useReducer(reducer, INITIAL_LOGIN_FORM_STATE)
+  const [formState, dispatch] = useReducer(
+    loginFormReducer,
+    INITIAL_LOGIN_FORM_STATE,
+  )
+  const navigate = useNavigate()
 
   const handleInputChange =
     (field: LoginFormField) => (event: React.FormEvent<HTMLInputElement>) => {
@@ -39,12 +24,22 @@ export const Login = () => {
       })
     }
 
-  const handleFormSubmit = (event: React.SyntheticEvent) => {
+  const handleFormSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
-    // TODO: validate form don't send to BE if no user or password provide.
+    // COMMENT: validate form don't send to BE if no user or password provide.
     if (formState.password !== '' && formState.username !== '') {
-      // submit to backend.
-      console.log('🚀 ~ handleFormSubmit ~ formState:', formState)
+      try {
+        const { token } = await getAxiosInstance().post<{ token: string }>(
+          '/user/login',
+          formState,
+        )
+        if (token) {
+          localStorage.setItem(config.accessToken, token)
+          navigate('/')
+        }
+      } catch (error) {
+        // TODO: handle error like error cause user and password does not match.
+      }
     }
   }
 
